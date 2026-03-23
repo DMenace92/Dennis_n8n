@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: n8n
+    runtime: node
+    plan: standard  # Needs paid plan for builds
+    region: oregon  # or your preferred region
+    buildCommand: |
+      corepack enable && \
+      corepack prepare pnpm@10.22.0 --activate && \
+      pnpm install && \
+      pnpm build
+    startCommand: pnpm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: PORT
+        value: "5678"
+      - key: N8N_PROTOCOL
+        value: https
+      - key: N8N_PORT
+        value: "5678"
+      - key: WEBHOOK_URL
+        value: https://n8n-[your-service-name].onrender.com/
+      - key: N8N_ENCRYPTION_KEY
+        generateValue: true
